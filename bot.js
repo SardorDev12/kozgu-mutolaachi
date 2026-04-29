@@ -11,13 +11,21 @@ dotenv.config();
 const TOKEN = process.env.TOKEN
 const ADMIN = process.env.ADMIN
 
-const bot = new TelegramBot(TOKEN, {
-  polling: {
+const bot = new TelegramBot(TOKEN, { polling: false });
+
+async function startBot() {
+  await bot.deleteWebHook({ drop_pending_updates: true });
+
+  await bot.startPolling({
     params: {
       allowed_updates: ['message', 'my_chat_member'],
     },
-  },
-});
+  });
+
+  console.log('Bot polling started');
+}
+
+startBot();
 
 fs.mkdirSync('data', { recursive: true });
 
@@ -73,7 +81,9 @@ bot.on('my_chat_member', (update) => {
 });
 
 bot.on('message', (msg) => {
-  if (!msg.text || msg.chat.id != ADMIN) return;
+  if (!msg.text && msg.chat.id != ADMIN){
+    console.log("You are not an admin")
+  }
   if (msg.text.startsWith('/')) return;
 
   try {
@@ -99,13 +109,17 @@ bot.on('message', (msg) => {
 });
 
 bot.onText(/\/daily(@\w+)?/, (msg) => {
-  if(msg.chat.id != ADMIN) return
+  if(msg.chat.id != ADMIN){
+    console.log("You are not an admin")
+  }
   const leaderboard = daily();
   broadcast(leaderboard);
 });
 
 bot.onText(/\/remind(@\w+)?/, (msg) => {
-  if(msg.chat.id != ADMIN) return
+  if(msg.chat.id != ADMIN){
+    console.log("You are not an admin")
+  }
   broadcast('Bugun mutolaa qildingizmi?');
 });
 
