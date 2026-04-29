@@ -9,6 +9,8 @@ const { daily } = require('./helpers/daily');
 dotenv.config();
 
 const TOKEN = process.env.TOKEN
+const ADMIN = process.env.ADMIN
+
 const bot = new TelegramBot(TOKEN, {
   polling: {
     params: {
@@ -66,7 +68,7 @@ bot.on('my_chat_member', (update) => {
 });
 
 bot.on('message', (msg) => {
-  if (!msg.text) return;
+  if (!msg.text || msg.chat.id != ADMIN) return;
   if (msg.text.startsWith('/')) return;
 
   try {
@@ -92,11 +94,13 @@ bot.on('message', (msg) => {
 });
 
 bot.onText(/\/daily(@\w+)?/, (msg) => {
+  if(msg.chat.id != ADMIN) return
   const leaderboard = daily();
   broadcast(leaderboard);
 });
 
 bot.onText(/\/remind(@\w+)?/, (msg) => {
+  if(msg.chat.id != ADMIN) return
   broadcast('Bugun mutolaa qildingizmi?');
 });
 
