@@ -8,7 +8,7 @@ const { daily } = require('./helpers/daily');
 
 dotenv.config();
 
-const TOKEN = '8735592457:AAGtEwrIpJZdnDQwQehmUDz5UMFsWe1_KOU';
+const TOKEN = process.env.TOKEN
 const bot = new TelegramBot(TOKEN, {
   polling: {
     params: {
