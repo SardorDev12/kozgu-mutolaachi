@@ -44,6 +44,7 @@ function addGroup(chat) {
     });
 
     saveGroups(groups);
+    bot.sendMessage(ADMIN, `Group saved: ${<a href="tg://chat?id=${chat.id}">${chat.title}</a>}`,{ parse_mode: 'HTML' })
     console.log('Group saved:', chat.title, chat.id);
   }
 }
